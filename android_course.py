@@ -1,4 +1,4 @@
-from random import random
+import random
 import unittest
 import os
 from unittest import suite
@@ -11,11 +11,16 @@ from selenium.common.exceptions import NoSuchElementException
 
 class TableSearchTest(unittest.TestCase):
     blackButton = '//android.view.View[6]/android.view.View/android.view.View/android.view.View/android.widget.Button' # 검정색 버튼 모두
-    gotoHomeButton = '//android.widget.Button[3]' # 홈으로 가기
+    gotoHomeButton = '//android.view.View/android.view.View[1]/android.view.View/android.view.View[2]/android.widget.Button' # 홈으로 가기
     courseButton = '//androidx.compose.ui.platform.ComposeView[2]/android.view.View/android.view.View[1]' # 추천 학습 셀
     courseTitleText = '//androidx.compose.ui.platform.ComposeView[2]/android.view.View/android.view.View[1]/android.view.View[3]' # 추천 학습 셀 타이틀
     anwserTest = '//android.view.View[5]/android.view.View/android.view.View[6]'
+    startSoundCheck = '//android.view.View/android.view.View[3]/android.view.View/android.view.View[3]/android.widget.Button'
+    startTestPrep = '//android.view.View/android.view.View[3]/android.view.View/android.view.View[3]/android.widget.Button'
+    soundPlayWhenLCblack = '//android.view.View/android.view.View[1]/android.view.View/android.view.View[6]/android.view.View/android.view.View/android.view.View[1]/android.widget.Button'
+    testPrepPopup = '//android.widget.Button[2]'
     def setUp(self):
+        
         cmd = 'adb shell su 0 setprop gsm.sim.operator.iso-country kr'
         os.popen(cmd)
         self.driver = webdriver.Remote(
@@ -35,112 +40,103 @@ class TableSearchTest(unittest.TestCase):
         driver = self.driver
         driver.implicitly_wait(10)
 
-        email_id = 'sunbae@yopmail.com'
-        email_pw = '1qaz2wsx'
+        # Email login 
+        self.email_login() 
 
-        # already has account 
-        #driver.find_element(By.ID, "co.riiid.vida:id/btn_has_account").click()
-        driver.find_element(By.XPATH, '//android.view.ViewGroup/android.widget.LinearLayout[2]').click()
-        sleep(2)
+        try:
+            getTitle = driver.find_element(By.XPATH, self.courseTitleText).get_attribute('text')
+            recommended_cell = driver.find_element(By.XPATH, self.courseButton)
+            recommended_cell.click()
+            print(f'{getTitle}')
+            sleep(2.9)
+
+            if getTitle.find('쪽지') >= 0:
+                self.selectAnswer(True)
+            elif getTitle.find('어휘 암기') >= 0:
+                self.VocaTest()
+            else:
+                self.selectAnswer()
+        except Exception as e:
+            print(f'Exception : {e}')
         
-        # i doesn't find a login type
-        # co.riiid.vida:id/content_email
-        driver.find_element(By.XPATH, '//android.view.ViewGroup/android.widget.LinearLayout[2]').click()
-        sleep(1)
 
-        # go email login 
-        # co.riiid.vida:id/btn_email
-        driver.find_element(By.XPATH, "//android.view.ViewGroup/android.widget.LinearLayout[3]/android.widget.LinearLayout[2]").click()
-        sleep(1)
-
-        # email field
-        emailBtn =  driver.find_element(By.XPATH, "//android.view.ViewGroup[1]/android.widget.EditText")
-        emailBtn.send_keys(email_id)
-        sleep(1)                                                                 
-
-        # pw field
-        pwBtn =  driver.find_element(By.XPATH, "//android.view.ViewGroup[2]/android.widget.EditText")
-        pwBtn.send_keys(email_pw)
-        sleep(1)
-
-        # enter the login button
-        loginBtn = driver.find_element(By.ID, 'co.riiid.vida:id/btn_sign_in')
-        loginBtn.click()
-
-        sleep(5)
-
-
-        getTitle = driver.find_element(By.XPATH, self.courseTitleText).get_attribute('text')
-        recommended_cell = driver.find_element(By.XPATH, self.courseButton)
-        recommended_cell.click()
-        print(f'{getTitle}')
-        sleep(2.9)
-
-
-        if getTitle.find('쪽지') >= 0:
-            self.selectAnswer(True)
-        elif getTitle.find('어휘 암기') >= 0:
-            self.VocaTest()
-        else:
-            self.selectAnswer()
 
     def selectAnswer(self, isReview=False):
         driver = self.driver
         isEnd = False
         isNext = False
         self.isPoupExist()
+        self.isSoundPopup()
         print("팝업 체크")
 
         print("select answser 진입")
+
+        # 답안 체크 
         while(True):
             try:
                 # check anwser
+                self.isPoupExist()
                 selector = self.getSelectAnswer()
                 driver.find_element(By.XPATH, selector).click()
                 print("답안 체크")
-                sleep(1.2)
+                sleep(1.2)            
 
+                if self.isShown(self.blackButton):
+                    break
+                else:
+                    selector = self.getSelectAnswer()
+                    driver.find_element(By.XPATH, selector).click()
+            except NoSuchElementException:
+                print('not found')
+                break
+        # 정답 확인하기 
+        while(True):
+            # check anwser 
+            isNext = False
+            try:
+                self.isPoupExist()
                 btnText = driver.find_element(By.XPATH, self.blackButton).get_attribute('text')
                 print(f'found > {btnText}')
+            except NoSuchElementException:
+                selector = self.getSelectAnswer()
+                driver.find_element(By.XPATH, selector).click()
 
-                if btnText.find('정답 확인하기') >= 0:
-                    sleep(1.2)
+            if btnText.find('정답 확인하기') >= 0:
+                sleep(1.2)
+                driver.find_element(By.XPATH, self.blackButton).click()
+                # if hilight pop up
+                self.isPoupExist()
+                isNext = True
+            
+            if isNext:
+                sleep(1.2)
+                btnBlackBar = driver.find_element(By.XPATH, self.blackButton)
+                btnText = btnBlackBar.get_attribute('text')
+                print(f'found > {btnText}')
+
+                if btnText.find('다음 문제') >= 0:
                     driver.find_element(By.XPATH, self.blackButton).click()
-                    # if hilight pop up
-                    self.isPoupExist()
-                    isNext = True
-                
-                if isNext:
-                    sleep(1.2)
-                    btnBlackBar = driver.find_element(By.XPATH, self.blackButton)
-                    btnText = btnBlackBar.get_attribute('text')
-                    print(f'found > {btnText}')
-
-                    if btnText.find('다음 문제') >= 0:
+                    sleep(0.8)
+                elif btnText.find('학습 종료하기') >= 0:
+                    # 쪽지 시험이라면 
+                    if isReview:
+                        sleep(1)
                         driver.find_element(By.XPATH, self.blackButton).click()
-                    elif btnText.find('학습 종료하기') >= 0:
-                        # 쪽지 시험이라면 
-                        if isReview:
-                            sleep(1)
-                            driver.find_element(By.XPATH, self.blackButton).click()
-                            print('학습 종료하기 버튼 클릭')
-                            sleep(1)
+                        print('학습 종료하기 버튼 클릭')
+                        sleep(1)
 
-                            for i in range(0,1):
-                                sleep(2)
-                                # n Cycle 결과보기 -> n Cycle 시작하기
-                                btnElement = driver.find_element(By.XPATH, self.blackButton)
-                                btnElement.click()
-                                print(f'{btnElement.text} 버튼 클릭')
-                        else:
-                            self.TestPrep_End(isEnd)
-                        #return True
+                        for i in range(0,1):
+                            sleep(2)
+                            # n Cycle 결과보기 -> n Cycle 시작하기
+                            btnElement = driver.find_element(By.XPATH, self.gotoHomeButton)
+                            btnElement.click()
+                            print(f'{btnElement.text} 버튼 클릭')
+                    else:
+                        self.TestPrep_End(isEnd)
+                else
+                    if self.isShown()
+                    #return True
                     
-                # 
-            except NoSuchElementException as e:
-                # check anwser
-                driver.find_element(By.XPATH, self.getSelectAnswer()).click()
-                pass
 
     def VocaTest(self):
         driver = self.driver
@@ -182,7 +178,43 @@ class TableSearchTest(unittest.TestCase):
 
 
 
+    def email_login(self):
+        driver = self.driver
+        driver.implicitly_wait(10)
 
+        email_id = 'sunbae@yopmail.com'
+        email_pw = '1qaz2wsx'
+
+        # already has account 
+        #driver.find_element(By.ID, "co.riiid.vida:id/btn_has_account").click()
+        driver.find_element(By.XPATH, '//android.view.ViewGroup/android.widget.LinearLayout[2]').click()
+        sleep(2)
+        
+        # i doesn't find a login type
+        # co.riiid.vida:id/content_email
+        driver.find_element(By.XPATH, '//android.view.ViewGroup/android.widget.LinearLayout[2]').click()
+        sleep(1)
+
+        # go email login 
+        # co.riiid.vida:id/btn_email
+        driver.find_element(By.XPATH, "//android.view.ViewGroup/android.widget.LinearLayout[3]/android.widget.LinearLayout[2]").click()
+        sleep(1)
+
+        # email field
+        emailBtn =  driver.find_element(By.XPATH, "//android.view.ViewGroup[1]/android.widget.EditText")
+        emailBtn.send_keys(email_id)
+        sleep(1)                                                                 
+
+        # pw field
+        pwBtn =  driver.find_element(By.XPATH, "//android.view.ViewGroup[2]/android.widget.EditText")
+        pwBtn.send_keys(email_pw)
+        sleep(1)
+
+        # enter the login button
+        loginBtn = driver.find_element(By.ID, 'co.riiid.vida:id/btn_sign_in')
+        loginBtn.click()
+
+        sleep(5)        
 
     def getSelectAnswer(self):
         driver = self.driver
@@ -211,15 +243,48 @@ class TableSearchTest(unittest.TestCase):
         except NoSuchElementException:
             pass
 
+
+    def isShown(self, xP):
+        # 어떠한 Element 들이 다 보여진 상태를 체크하는 함수
+        if self.driver.find_element(By.XPATH, xP).is_displayed():
+            return True
+        else:
+            return False
+
+
+    def isSoundPopup(self):
+        driver = self.driver
+
+        try:
+            if self.isShown(self.startSoundCheck):
+                print("사운드체크 시작하기 존재 및 클릭")
+                startSoundCheck = driver.find_element(By.XPATH, self.startSoundCheck)
+                startSoundCheck.click()
+                sleep(0.8)
+                startTestPrep = driver.find_element(By.XPATH, self.startTestPrep)
+                startTestPrep.click()
+                print("내 목소리가 들리나요 존재 및 클릭")
+                sleep(0.7)
+
+            sleep(1)
+            if self.isShown(self.soundPlayWhenLCblack):
+                print("소리 재생하기 검정 버튼 존재")
+                soundPlay = driver.find_element(By.XPATH, self.soundPlayWhenLCblack)
+                soundPlay.click()
+                sleep(0.7)
+        except Exception as e:
+            print(f'exception : {e}')
+
     def isPoupExist(self):
         driver = self.driver
 
         try: 
-            popupBtn = driver.find_element(By.XPATH, '//android.widget.Button[2]')
-            popupBtn.click()
-            print("팝업 닫음")
-        except NoSuchElementException as e:
-            print("하이라이트 팝업 없음")
+            if self.isShown(self.testPrepPopup):                    
+                popupBtn = driver.find_element(By.XPATH, self.testPrepPopup)
+                popupBtn.click()
+                print("팝업 닫음")
+        except Exception as e:
+            print("팝업 없음")
     
 
     def tearDown(self):
