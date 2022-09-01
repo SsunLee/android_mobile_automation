@@ -15,10 +15,10 @@ class TableSearchTest(unittest.TestCase):
     courseButton = '//androidx.compose.ui.platform.ComposeView[2]/android.view.View/android.view.View[1]' # 추천 학습 셀
     courseTitleText = '//androidx.compose.ui.platform.ComposeView[2]/android.view.View/android.view.View[1]/android.view.View[3]' # 추천 학습 셀 타이틀
     anwserTest = '//android.view.View[5]/android.view.View/android.view.View[6]'
-    startSoundCheck = '//android.view.View/android.view.View[3]/android.view.View/android.view.View[3]/android.widget.Button'
+    startSoundCheck = '//android.view.View/android.view.View[2]/android.view.View/android.view.View[3]/android.widget.Button'
     startTestPrep = '//android.view.View/android.view.View[3]/android.view.View/android.view.View[3]/android.widget.Button'
     soundPlayWhenLCblack = '//android.view.View/android.view.View[1]/android.view.View/android.view.View[6]/android.view.View/android.view.View/android.view.View[1]/android.widget.Button'
-    testPrepPopup = '//android.widget.Button[2]'
+    testPrepPopup = '//android.widget.Button'
     def setUp(self):
         
         cmd = 'adb shell su 0 setprop gsm.sim.operator.iso-country kr'
@@ -95,6 +95,7 @@ class TableSearchTest(unittest.TestCase):
             isNext = False
             try:
                 self.isPoupExist()
+                self.isSoundPopup()
                 btnText = driver.find_element(By.XPATH, self.blackButton).get_attribute('text')
                 print(f'found > {btnText}')
             except NoSuchElementException:
@@ -106,6 +107,7 @@ class TableSearchTest(unittest.TestCase):
                 driver.find_element(By.XPATH, self.blackButton).click()
                 # if hilight pop up
                 self.isPoupExist()
+                self.isSoundPopup()
                 isNext = True
             
             if isNext:
@@ -113,7 +115,7 @@ class TableSearchTest(unittest.TestCase):
                 btnBlackBar = driver.find_element(By.XPATH, self.blackButton)
                 btnText = btnBlackBar.get_attribute('text')
                 print(f'found > {btnText}')
-
+                self.isSoundPopup()
                 if btnText.find('다음 문제') >= 0:
                     driver.find_element(By.XPATH, self.blackButton).click()
                     sleep(0.8)
@@ -133,8 +135,10 @@ class TableSearchTest(unittest.TestCase):
                             print(f'{btnElement.text} 버튼 클릭')
                     else:
                         self.TestPrep_End(isEnd)
-                else
-                    if self.isShown()
+                else:
+                    if self.isShown(self.blackButton):
+                        driver.find_element(By.XPATH, self.blackButton).click()
+                        print("re click")
                     #return True
                     
 
@@ -217,7 +221,8 @@ class TableSearchTest(unittest.TestCase):
         sleep(5)        
 
     def getSelectAnswer(self):
-        driver = self.driver
+        driver = self.driver 
+        # 일반 답안 1개인 경우 
         testGroup = driver.find_elements(By.XPATH, '//android.view.View[5]/android.view.View')
         testCnt = len(testGroup)
         num = random.randrange(0, testCnt)
