@@ -8,17 +8,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from scriptXpath import scXpath
 
-class TableSearchTest(unittest.TestCase):
-    blackButton = '//android.view.View[6]/android.view.View/android.view.View/android.view.View/android.widget.Button' # 검정색 버튼 모두
-    gotoHomeButton = '//android.view.View/android.view.View[1]/android.view.View/android.view.View[2]/android.widget.Button' # 홈으로 가기
-    courseButton = '//androidx.compose.ui.platform.ComposeView[2]/android.view.View/android.view.View[1]' # 추천 학습 셀
-    courseTitleText = '//androidx.compose.ui.platform.ComposeView[2]/android.view.View/android.view.View[1]/android.view.View[3]' # 추천 학습 셀 타이틀
-    anwserTest = '//android.view.View[5]/android.view.View/android.view.View[6]'
-    startSoundCheck = '//android.view.View/android.view.View[2]/android.view.View/android.view.View[3]/android.widget.Button'
-    startTestPrep = '//android.view.View/android.view.View[3]/android.view.View/android.view.View[3]/android.widget.Button'
-    soundPlayWhenLCblack = '//android.view.View/android.view.View[1]/android.view.View/android.view.View[6]/android.view.View/android.view.View/android.view.View[1]/android.widget.Button'
-    testPrepPopup = '//android.widget.Button'
+
+class AndroidCourseTest(unittest.TestCase):
+
     def setUp(self):
         
         cmd = 'adb shell su 0 setprop gsm.sim.operator.iso-country kr'
@@ -44,8 +38,8 @@ class TableSearchTest(unittest.TestCase):
         self.email_login() 
 
         try:
-            getTitle = driver.find_element(By.XPATH, self.courseTitleText).get_attribute('text')
-            recommended_cell = driver.find_element(By.XPATH, self.courseButton)
+            getTitle = driver.find_element(By.XPATH, scXpath.courseTitleText).get_attribute('text')
+            recommended_cell = driver.find_element(By.XPATH, scXpath.courseButton)
             recommended_cell.click()
             print(f'{getTitle}')
             sleep(2.9)
@@ -112,32 +106,32 @@ class TableSearchTest(unittest.TestCase):
             
             if isNext:
                 sleep(1.2)
-                btnBlackBar = driver.find_element(By.XPATH, self.blackButton)
+                btnBlackBar = driver.find_element(By.XPATH, scXpath.blackButton)
                 btnText = btnBlackBar.get_attribute('text')
                 print(f'found > {btnText}')
                 self.isSoundPopup()
                 if btnText.find('다음 문제') >= 0:
-                    driver.find_element(By.XPATH, self.blackButton).click()
+                    driver.find_element(By.XPATH, scXpath.blackButton).click()
                     sleep(0.8)
                 elif btnText.find('학습 종료하기') >= 0:
                     # 쪽지 시험이라면 
                     if isReview:
                         sleep(1)
-                        driver.find_element(By.XPATH, self.blackButton).click()
+                        driver.find_element(By.XPATH, scXpath.blackButton).click()
                         print('학습 종료하기 버튼 클릭')
                         sleep(1)
 
                         for i in range(0,1):
                             sleep(2)
                             # n Cycle 결과보기 -> n Cycle 시작하기
-                            btnElement = driver.find_element(By.XPATH, self.gotoHomeButton)
+                            btnElement = driver.find_element(By.XPATH, scXpath.gotoHomeButton)
                             btnElement.click()
                             print(f'{btnElement.text} 버튼 클릭')
                     else:
                         self.TestPrep_End(isEnd)
                 else:
-                    if self.isShown(self.blackButton):
-                        driver.find_element(By.XPATH, self.blackButton).click()
+                    if self.isShown(scXpath.blackButton):
+                        driver.find_element(By.XPATH, scXpath.blackButton).click()
                         print("re click")
                     #return True
                     
@@ -236,12 +230,12 @@ class TableSearchTest(unittest.TestCase):
         driver = self.driver
         sleep(1.2)
         try:
-            btnElement = driver.find_element(By.XPATH, self.blackButton)
+            btnElement = driver.find_element(By.XPATH, scXpath.blackButton)
             btnElement.click()
             print('학습 종료하기 버튼 클릭')
             sleep(1.2)
             # 홈으로 가기
-            btnElement = driver.find_element(By.XPATH, self.gotoHomeButton)
+            btnElement = driver.find_element(By.XPATH, scXpath.gotoHomeButton)
             btnElement.click()
             print('홈으로 가기 버튼 클릭')
             print('학습 셀 완료!')
@@ -261,20 +255,20 @@ class TableSearchTest(unittest.TestCase):
         driver = self.driver
 
         try:
-            if self.isShown(self.startSoundCheck):
+            if self.isShown(scXpath.startSoundCheck):
                 print("사운드체크 시작하기 존재 및 클릭")
-                startSoundCheck = driver.find_element(By.XPATH, self.startSoundCheck)
+                startSoundCheck = driver.find_element(By.XPATH, scXpath.startSoundCheck)
                 startSoundCheck.click()
                 sleep(0.8)
-                startTestPrep = driver.find_element(By.XPATH, self.startTestPrep)
+                startTestPrep = driver.find_element(By.XPATH, scXpath.startTestPrep)
                 startTestPrep.click()
                 print("내 목소리가 들리나요 존재 및 클릭")
                 sleep(0.7)
 
             sleep(1)
-            if self.isShown(self.soundPlayWhenLCblack):
+            if self.isShown(scXpath.soundPlayWhenLCblack):
                 print("소리 재생하기 검정 버튼 존재")
-                soundPlay = driver.find_element(By.XPATH, self.soundPlayWhenLCblack)
+                soundPlay = driver.find_element(By.XPATH, scXpath.soundPlayWhenLCblack)
                 soundPlay.click()
                 sleep(0.7)
         except Exception as e:
@@ -284,8 +278,8 @@ class TableSearchTest(unittest.TestCase):
         driver = self.driver
 
         try: 
-            if self.isShown(self.testPrepPopup):                    
-                popupBtn = driver.find_element(By.XPATH, self.testPrepPopup)
+            if self.isShown(scXpath.testPrepPopup):                    
+                popupBtn = driver.find_element(By.XPATH, scXpath.testPrepPopup)
                 popupBtn.click()
                 print("팝업 닫음")
         except Exception as e:
