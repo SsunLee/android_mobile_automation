@@ -23,10 +23,10 @@ class AndroidCourseTest(unittest.TestCase):
                 "platformName": "Android",
                 "appium:platformVersion": "11.0",
                 "appium:deviceName": "Android Emulator",
-                "appium:app": "Users/riiid/Downloads/27688948.apk",
+                "appium:app": "Users/riiid/Downloads/27706198.apk",
                 "appium:automationName": "Appium",
                 "appium:newCommandTimeout": "1000",
-                "appium:appPackage": "co.riiid.vida",
+                "appium:appPackage": "co.riiid.vida.staging",
                 "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
             })
 
@@ -178,15 +178,15 @@ class AndroidCourseTest(unittest.TestCase):
 
     def email_login(self):
         driver = self.driver
-        driver.implicitly_wait(10)
+        driver.implicitly_wait(20)
 
-        email_id = 'sunbae@yopmail.com'
+        email_id = 'kr.test02@yopmail.com'
         email_pw = '1qaz2wsx'
 
         # already has account 
         #driver.find_element(By.ID, "co.riiid.vida:id/btn_has_account").click()
         driver.find_element(By.XPATH, '//android.view.ViewGroup/android.widget.LinearLayout[2]').click()
-        sleep(2)
+        sleep(4)
         
         # i doesn't find a login type
         # co.riiid.vida:id/content_email
@@ -209,7 +209,7 @@ class AndroidCourseTest(unittest.TestCase):
         sleep(1)
 
         # enter the login button
-        loginBtn = driver.find_element(By.ID, 'co.riiid.vida:id/btn_sign_in')
+        loginBtn = driver.find_element(By.XPATH, '//android.view.ViewGroup/android.widget.LinearLayout[1]')
         loginBtn.click()
 
         sleep(5)        
@@ -290,6 +290,6 @@ class AndroidCourseTest(unittest.TestCase):
         self.driver.quit()
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TableSearchTest)
+    suite = unittest.TestLoader().loadTestsFromTestCase(AndroidCourseTest)
     unittest.TextTestRunner(verbosity=2).run(suite)
 

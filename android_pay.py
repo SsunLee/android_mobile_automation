@@ -83,14 +83,16 @@ class androidPayClass(unittest.TestCase):
 
 
         # 이 부분은 못찾고 있음
-        iv_lastBuy = '//android.view.ViewGroup/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View/android.view.View[2]/android.view.View[9]'
+        iv_lastBuy = '//android.webkit.WebView/android.view.View/android.view.View/android.view.View/android.view.View[3]/android.widget.Button'
         lastBuyEle = driver.find_element(By.XPATH, iv_lastBuy)
         lastBuyEle.click()
         print("click detaail click")
 
 
         # naver login t_t
-        emailField = driver.find_element(By.ID, 'input_item_id')
+        #emailField = driver.find_element(By.ID, 'input_item_id')
+        #emailField = driver.find_element(By.XPATH, '//android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View/android.view.View[1]/android.view.View/android.widget.EditText')
+        emailField = driver.find_element(By.ID, 'id')
         emailtext = 'tnsqo1126'
 
         for c in emailtext:  
@@ -101,7 +103,10 @@ class androidPayClass(unittest.TestCase):
             emailField.send_keys(c)
         sleep(2)
 
-        passField = driver.find_element(By.ID, 'input_item_pw')
+        #passField = driver.find_element(By.ID, 'input_item_pw')
+        # android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View/android.view.View[2]/android.view.View/android.widget.EditText
+        passField = driver.find_element(By.ID, 'pw')
+
         passdata = 'zmfjrtmqaqa1@1@'
         for c in passdata:
             i = random.randrange(0, 10)
