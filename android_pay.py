@@ -1,4 +1,6 @@
 
+import email
+from email.policy import default
 import unittest
 import os
 from unittest import suite
@@ -77,6 +79,7 @@ class androidPayClass(unittest.TestCase):
         #self.ActionDrag()
         driver.swipe(800, 2242,798, 963, 1500)
 
+        sleep(0.8)
         iv_NaverPay = '//android.view.ViewGroup/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View/android.view.View/android.widget.Button[2]'
         NaverPayEle = driver.find_element(By.XPATH, iv_NaverPay)
         NaverPayEle.click()
@@ -90,32 +93,51 @@ class androidPayClass(unittest.TestCase):
 
 
         # naver login t_t
-        #emailField = driver.find_element(By.ID, 'input_item_id')
-        #emailField = driver.find_element(By.XPATH, '//android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View/android.view.View[1]/android.view.View/android.widget.EditText')
-        emailField = driver.find_element(By.ID, 'id')
+        emailField = driver.find_element(By.XPATH, '//android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View/android.view.View[1]/android.view.View/android.widget.EditText')
+        emailField.click()
         emailtext = 'tnsqo1126'
-
-        for c in emailtext:  
-            i = random.randrange(0, 10)
-            index = i / 100
-            sleep(index)
-            print(index)
-            emailField.send_keys(c)
+        emailField.send_keys(emailtext)
+        # for c in emailtext:  
+        #     i = random.randrange(0, 10)
+        #     index = i / 100
+        #     sleep(index)
+        #     print(index)
+        #     emailField.send_keys(c)
         sleep(2)
 
-        #passField = driver.find_element(By.ID, 'input_item_pw')
-        # android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View/android.view.View[2]/android.view.View/android.widget.EditText
-        passField = driver.find_element(By.ID, 'pw')
-
+        # password field 
+        passField = driver.find_element(By.XPATH, '//android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View/android.view.View[2]/android.view.View/android.widget.EditText')
+        passField.click()
         passdata = 'zmfjrtmqaqa1@1@'
-        for c in passdata:
-            i = random.randrange(0, 10)
-            index = i / 100
-            sleep(index)
-            print(index)
-            passField.send_keys(c)
+        passField.send_keys(passdata)
+        sleep(0.8)        
+        loginBtn = driver.find_element(By.XPATH, '//android.webkit.WebView/android.view.View/android.view.View/android.view.View/android.widget.Button')
+        loginBtn.click()
+
+        # new browser environment
+        notAdd = driver.find_element(By.XPATH, '//android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[4]/android.widget.Button[2]')
+        notAdd.click()
+        sleep(0.8)
+
+        driver.swipe(800, 2242,798, 200, 1500)
+
+        # switch NaverPay WebView 
+        NaverPayWebView = driver.contexts[1]
+        driver.switch_to.context(NaverPayWebView)
         
-        passField.send_keys(Keys.ENTER)
+
+        TouchAction(driver).tap(None, 200, 620, 1).perform()
+
+        DefaultView = driver.context[0]
+        driver.switch_to.context(DefaultView)
+        
+        #driver.find_element(By.XPATH, '//div[@id="pageNavigation"]').click()
+        driver.implicitly_wait(20)
+        
+
+
+        sleep(10)
+
 
 
 
