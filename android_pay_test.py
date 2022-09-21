@@ -15,7 +15,7 @@ from appium.webdriver.common.touch_action import TouchAction
 from android_course_test import AndroidCourseTest
 import random
 from selenium.webdriver.common.keys import Keys
-
+from scriptXpath import scXpath
 
 
 class androidPayClass(unittest.TestCase):
@@ -25,16 +25,7 @@ class androidPayClass(unittest.TestCase):
         os.popen(cmd)
         self.driver = webdriver.Remote(
             command_executor='http://127.0.0.1:4723/wd/hub',
-            desired_capabilities={
-                "platformName": "Android",
-                "appium:platformVersion": "11.0",
-                "appium:deviceName": "Android Emulator",
-                "appium:app": "Users/riiid/Downloads/27706198.apk",
-                "appium:automationName": "Appium",
-                "appium:newCommandTimeout": "1000",
-                "appium:appPackage": "co.riiid.vida.staging",
-                "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
-            })
+            desired_capabilities=scXpath.device_cap)
 
     def test_method(self):
         driver = self.driver

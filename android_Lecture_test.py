@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 
 from android_course_test import AndroidCourseTest
-
+from scriptXpath import scXpath
 
 
 class androidLectureClass(unittest.TestCase):
@@ -19,16 +19,7 @@ class androidLectureClass(unittest.TestCase):
         os.popen(cmd)
         self.driver = webdriver.Remote(
             command_executor='http://127.0.0.1:4723/wd/hub',
-            desired_capabilities={
-                "platformName": "Android",
-                "appium:platformVersion": "11.0",
-                "appium:deviceName": "Android Emulator",
-                "appium:app": "Users/riiid/Downloads/27688948.apk",
-                "appium:automationName": "Appium",
-                "appium:newCommandTimeout": "1000",
-                "appium:appPackage": "co.riiid.vida",
-                "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
-            })
+            desired_capabilities=scXpath.device_cap)
 
     def test_method(self):
         driver = self.driver 
@@ -36,8 +27,18 @@ class androidLectureClass(unittest.TestCase):
 
         AndroidCourseTest.email_login(self)
 
-        selectBtnID = 'co.riiid.vida:id/fragment_self'
-        selectBtn = driver.find_element(By.ID, selectBtnID)
+        # if check the bottom sheet 
+        blChk = AndroidCourseTest.isBottomSheetExist(self)
+        if blChk == True:
+            #닫는다.
+            btnClose = driver.find_element(By.ID,'co.riiid.vida.staging:id/btn_close')
+            btnClose.click()
+
+        AndroidCourseTest.isPoupExist(self)
+
+
+        selectBtnXpath = '//android.widget.FrameLayout[@content-desc="선택 학습"]'
+        selectBtn = driver.find_element(By.XPATH, selectBtnXpath)
         selectBtn.click()
         sleep(1)
         
@@ -54,15 +55,23 @@ class androidLectureClass(unittest.TestCase):
         lectureEnterXpath = '//android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[2]'
         lectureCell = driver.find_element(By.XPATH, lectureEnterXpath)
         lectureCell.click()
-        print(f"세부강의 선택 : {lectureCell.text}")
+        #print(f"세부강의 선택 : {lectureCell.text}")
         sleep(3)
 
-        yutubeBtnID = 'movie_player'
-        if self.isShown(yutubeBtnID, By.ID):
-            # iframe
-            driver.find_element(By.ID, yutubeBtnID).click()
-            sleep(5)
-            
+        #yutubeBtnID = "//*[contains(@text, '재생')]"
+        yutubeBtnXpath = '//android.view.View/android.view.View[4]/android.widget.Button'
+        driver.find_element(By.XPATH, yutubeBtnXpath).click()
+        sleep(15)
+        print("강의 재생 중")
+        
+        # 학습 종료하기 또는 다음 강의 시청하기 
+        specificXpath = "//android.widget.Button[contains(@text,'학습 종료하기')]"
+        EndButton = driver.find_element(By.XPATH, specificXpath)
+        EndButton.click()
+
+        sleep(10)
+        
+
             
 
             

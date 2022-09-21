@@ -19,21 +19,13 @@ class AndroidCourseTest(unittest.TestCase):
         os.popen(cmd)
         self.driver = webdriver.Remote(
             command_executor='http://127.0.0.1:4723/wd/hub',
-            desired_capabilities={
-                "platformName": "Android",
-                "appium:platformVersion": "11.0",
-                "appium:deviceName": "Android Emulator",
-                "appium:app": "Users/riiid/Downloads/27706198.apk",
-                "appium:automationName": "Appium",
-                "appium:newCommandTimeout": "1000",
-                "appium:appPackage": "co.riiid.vida.staging",
-                "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
-            })
+            desired_capabilities=scXpath.device_cap)
 
     def test_addToAsset(self):
         driver = self.driver
         driver.implicitly_wait(10)
 
+        sleep(2)
         # Email login 
         self.email_login() 
 
@@ -180,6 +172,7 @@ class AndroidCourseTest(unittest.TestCase):
         driver = self.driver
         driver.implicitly_wait(20)
 
+        sleep(2)
         email_id = 'kr.test02@yopmail.com'
         email_pw = '1qaz2wsx'
 
@@ -284,7 +277,18 @@ class AndroidCourseTest(unittest.TestCase):
                 print("팝업 닫음")
         except Exception as e:
             print("팝업 없음")
-    
+
+
+    def isBottomSheetExist(self):
+        driver = self.driver
+        print("Bottom 시트가 있는지 Check ")
+        blChk = driver.find_element(By.ID,'co.riiid.vida.staging:id/iv_marketing_image').is_displayed()
+        if blChk:
+            print("BottomSheet 존재!")
+            return True
+        else:
+            print("BottomSheet 없음!")
+            return False   
 
     def tearDown(self):
         self.driver.quit()

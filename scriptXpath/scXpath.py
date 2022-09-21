@@ -7,3 +7,23 @@ startSoundCheck = '//android.view.View/android.view.View[2]/android.view.View/an
 startTestPrep = '//android.view.View/android.view.View[3]/android.view.View/android.view.View[3]/android.widget.Button'
 soundPlayWhenLCblack = '//android.view.View/android.view.View[1]/android.view.View/android.view.View[6]/android.view.View/android.view.View/android.view.View[1]/android.widget.Button'
 testPrepPopup = '//android.widget.Button'
+
+
+device_cap_up = {
+                "platformName": "Android",
+                "appium:deviceName": "Android Emulator",
+                "appium:automationName": "Appium",
+                "appium:newCommandTimeout": "1000",
+                "appium:appPackage": "co.riiid.vida.staging",
+                "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
+            }
+device_cap = {
+                "platformName": "Android",
+                "appium:platformVersion": "11.0",
+                "appium:deviceName": "Android Emulator",
+                "appium:app": "Users/riiid/Downloads/27706198.apk",
+                "appium:automationName": "Appium",
+                "appium:newCommandTimeout": "1000",
+                "appium:appPackage": "co.riiid.vida.staging",
+                "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
+            }
