@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import driver
 import unittest
 import os
 from unittest import suite
@@ -58,19 +59,41 @@ class androidLectureClass(unittest.TestCase):
         #print(f"세부강의 선택 : {lectureCell.text}")
         sleep(3)
 
-        #yutubeBtnID = "//*[contains(@text, '재생')]"
-        yutubeBtnXpath = '//android.view.View/android.view.View[4]/android.widget.Button'
-        driver.find_element(By.XPATH, yutubeBtnXpath).click()
-        sleep(15)
-        print("강의 재생 중")
-        
-        # 학습 종료하기 또는 다음 강의 시청하기 
-        specificXpath = "//android.widget.Button[contains(@text,'학습 종료하기')]"
-        EndButton = driver.find_element(By.XPATH, specificXpath)
-        EndButton.click()
+        self.watchingLecture(3,8)
 
+        
         sleep(10)
         
+
+            
+    def watchingLecture(self,duration, cnt):
+        endCnt = 0
+        driver = self.driver
+        for i in range(0,cnt):      
+            endCnt += 1
+            print(f'총 {cnt}회 중 {endCnt}번째')      
+            yutubeXpath = '//android.view.View/android.view.View[4]/android.widget.Button'
+            isPlaybtnExist = driver.find_element(By.XPATH, yutubeXpath).is_displayed()
+            if isPlaybtnExist:
+                driver.find_element(By.XPATH, yutubeXpath).click()
+                print("재생 버튼 클릭")
+                sleep(duration)
+                if endCnt==cnt:
+                    specificXpath = "//android.widget.Button[contains(@text,'학습 종료하기')]"
+                    EndButton = driver.find_element(By.XPATH, specificXpath)
+                    EndButton.click()
+                    print(f"{i}회 마지막 돌입 학습 종료하기")
+                    sleep(3)
+                else:
+                    nextLectureXpath = "//android.widget.Button[contains(@text, '다음 강의')]"
+                    nextLectureBtn = driver.find_element(By.XPATH, nextLectureXpath)
+                    nextLectureBtn.click()
+                    print(f"{i}회차 다음 강의 시청하기 클릭")
+
+
+
+        
+
 
             
 
