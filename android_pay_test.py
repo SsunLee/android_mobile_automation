@@ -16,7 +16,8 @@ from android_course_test import AndroidCourseTest
 import random
 from selenium.webdriver.common.keys import Keys
 from scriptXpath import scXpath
-
+from pyautogui import ImageNotFoundException
+import pyautogui
 
 class androidPayClass(unittest.TestCase):
    
@@ -76,7 +77,7 @@ class androidPayClass(unittest.TestCase):
         NaverPayEle.click()
 
 
-        # 이 부분은 못찾고 있음
+        
         iv_lastBuy = '//android.webkit.WebView/android.view.View/android.view.View/android.view.View/android.view.View[3]/android.widget.Button'
         lastBuyEle = driver.find_element(By.XPATH, iv_lastBuy)
         lastBuyEle.click()
@@ -108,22 +109,45 @@ class androidPayClass(unittest.TestCase):
         # new browser environment
         notAdd = driver.find_element(By.XPATH, '//android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[4]/android.widget.Button[2]')
         notAdd.click()
-        sleep(0.8)
+        sleep(3)
 
         driver.swipe(800, 2242,798, 200, 1500)
 
+        sleep(4)
         # switch NaverPay WebView 
-        NaverPayWebView = driver.contexts[1]
-        driver.switch_to.context(NaverPayWebView)
+        # NaverPayWebView = driver.contexts[1]
+        # driver.switch_to.context(NaverPayWebView)
         
+        # 결제하기 네이버 화면
+        #driver.tap(None, 25, 568, 1)
 
-        TouchAction(driver).tap(None, 200, 620, 1).perform()
+        # 결제하기 이미지 
+        self.clickNumPad("/Users/riiid/Downloads/pay.png")
+        sleep(4)
 
-        DefaultView = driver.context[0]
-        driver.switch_to.context(DefaultView)
+        self.clickNumPad("/Users/riiid/Downloads/zero.png")
+        sleep(1.8)
+        self.clickNumPad("/Users/riiid/Downloads/zero.png")
+        sleep(1.9)
+        self.clickNumPad("/Users/riiid/Downloads/six.png")
+        sleep(1.1)
+        self.clickNumPad("/Users/riiid/Downloads/six.png")
+        sleep(1.4)
+        self.clickNumPad("/Users/riiid/Downloads/eight.png")
+        sleep(1.5)
+        self.clickNumPad("/Users/riiid/Downloads/one.png")
+        sleep(1)
+        driver.implicitly_wait(20)
+        #TouchAction(driver).tap(None, 200, 620, 1).perform()
+        sleep(10)
+        
+        self.clickNumPad("/Users/riiid/Downloads/goLearn.png")
+        sleep(2)
+        #DefaultView = driver.context[0]
+        # driver.switch_to.context(DefaultView)
         
         #driver.find_element(By.XPATH, '//div[@id="pageNavigation"]').click()
-        driver.implicitly_wait(20)
+        
         
 
 
@@ -152,7 +176,25 @@ class androidPayClass(unittest.TestCase):
         # ePEle = driver.find_element(By.XPATH, endPath)
         # driver.scroll(spEle, ePEle)
         
-
+    def clickNumPad(self, imgPath):
+        isSafe = False
+        x = 0.0
+        y = 0.0
+        pg = pyautogui
+        while(True):
+            try:
+                sleep(1)
+                x,y = pg.locateCenterOnScreen(f'{imgPath}', grayscale=True, confidence=0.8)
+                x = x/2
+                y = y/2
+                pg.click(x,y)
+                pg.mouseDown()
+                pg.mouseUp()
+                isSafe = True
+            except ImageNotFoundException:
+                isSafe = False
+            if isSafe:
+                break
 
 
     # 나중에 분리 예정

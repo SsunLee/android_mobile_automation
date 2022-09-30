@@ -184,12 +184,12 @@ class AndroidCourseTest(unittest.TestCase):
         # i doesn't find a login type
         # co.riiid.vida:id/content_email
         driver.find_element(By.XPATH, '//android.view.ViewGroup/android.widget.LinearLayout[2]').click()
-        sleep(1)
+        sleep(2)
 
         # go email login 
         # co.riiid.vida:id/btn_email
         driver.find_element(By.XPATH, "//android.view.ViewGroup/android.widget.LinearLayout[3]/android.widget.LinearLayout[2]").click()
-        sleep(1)
+        sleep(2)
 
         # email field
         emailBtn =  driver.find_element(By.XPATH, "//android.view.ViewGroup[1]/android.widget.EditText")
