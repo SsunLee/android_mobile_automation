@@ -105,7 +105,7 @@ class androidPayClass(unittest.TestCase):
         sleep(0.8)        
         loginBtn = driver.find_element(By.XPATH, '//android.webkit.WebView/android.view.View/android.view.View/android.view.View/android.widget.Button')
         loginBtn.click()
-
+        
         # new browser environment
         notAdd = driver.find_element(By.XPATH, '//android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[4]/android.widget.Button[2]')
         notAdd.click()
@@ -181,18 +181,29 @@ class androidPayClass(unittest.TestCase):
         x = 0.0
         y = 0.0
         pg = pyautogui
+        imgA = None
+        accurancy = 0.9
+
         while(True):
-            try:
-                sleep(1)
-                x,y = pg.locateCenterOnScreen(f'{imgPath}', grayscale=True, confidence=0.8)
-                x = x/2
-                y = y/2
+            sleep(1)
+            
+            imgA = pg.locateCenterOnScreen(f'{imgPath}', grayscale=True, confidence=accurancy)
+            if imgA is not None:        
+                print(f'이미지 찾음 : {imgA}')
+                sleep(0.3)
+                x = imgA[0]
+                y = imgA[1]
+                x = x / 2
+                y = y / 2
                 pg.click(x,y)
                 pg.mouseDown()
                 pg.mouseUp()
                 isSafe = True
-            except ImageNotFoundException:
+            else:
+                accurancy -= 0.05
+                print(f'이미지 못찾음: {imgA} \r decrease a accurancy : {accurancy} ')
                 isSafe = False
+
             if isSafe:
                 break
 
