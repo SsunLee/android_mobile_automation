@@ -8,22 +8,29 @@ startTestPrep = '//android.view.View/android.view.View[3]/android.view.View/andr
 soundPlayWhenLCblack = '//android.view.View/android.view.View[1]/android.view.View/android.view.View[6]/android.view.View/android.view.View/android.view.View[1]/android.widget.Button'
 testPrepPopup = '//android.widget.Button'
 
+device_cap_aws = {
+                "platformName": "Android",
+                "appium:deviceName": "Android Emulator",
+                "appium:automationName": "Appium",
+                "appium:newCommandTimeout": "1000",
+                "appium:appPackage": "co.riiid.vida.staging",
+                "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
+            }
 
-device_cap_up = {
-                "platformName": "Android",
-                "appium:deviceName": "Android Emulator",
-                "appium:automationName": "Appium",
-                "appium:newCommandTimeout": "1000",
-                "appium:appPackage": "co.riiid.vida.staging",
-                "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
-            }
-device_cap = {
-                "platformName": "Android",
-                "appium:platformVersion": "11.0",
-                "appium:deviceName": "Android Emulator",
-                "appium:app": "Users/riiid/Downloads/27706198.apk",
-                "appium:automationName": "Appium",
-                "appium:newCommandTimeout": "1000",
-                "appium:appPackage": "co.riiid.vida.staging",
-                "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
-            }
+
+def getPath(usrName, filename):  
+    appPath = f"/Users/{usrName}/Downloads/{filename}.apk"
+    device_cap = {
+                    "platformName": "Android",
+                    "appium:platformVersion": "12.0",
+                    "appium:deviceName": "Android Emulator",
+                    "appium:app": appPath,
+                    "appium:automationName": "Appium",
+                    "appium:newCommandTimeout": "1000",
+                    "appium:appPackage": "co.riiid.vida.staging",
+                    "appium:appActivity": "co.riiid.vida.ui.splash.SplashActivity"
+                }
+
+    return device_cap
+
+print(getPath('sunbae', '27777.apk'))

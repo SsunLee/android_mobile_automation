@@ -17,9 +17,10 @@ class AndroidCourseTest(unittest.TestCase):
         
         cmd = 'adb shell su 0 setprop gsm.sim.operator.iso-country kr'
         os.popen(cmd)
+        cap = scXpath.getPath('sunbaelee', '27749574')
         self.driver = webdriver.Remote(
             command_executor='http://127.0.0.1:4723/wd/hub',
-            desired_capabilities=scXpath.device_cap)
+            desired_capabilities=cap)
 
     def test_addToAsset(self):
         driver = self.driver

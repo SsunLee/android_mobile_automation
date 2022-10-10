@@ -1,4 +1,3 @@
-from lib2to3.pgen2 import driver
 import unittest
 import os
 from unittest import suite
@@ -89,21 +88,6 @@ class androidLectureClass(unittest.TestCase):
                     nextLectureBtn = driver.find_element(By.XPATH, nextLectureXpath)
                     nextLectureBtn.click()
                     print(f"{i}회차 다음 강의 시청하기 클릭")
-
-
-
-        
-
-
-            
-
-            
-        
-
-
-
-
-
 
 
 
