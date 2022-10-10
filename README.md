@@ -16,7 +16,9 @@ pip3 install pyautogui
 ```
 
 <br>
+
 ### 📂 Structure 
+
 ```shell
 ├── README.md
 ├── __init__.py
