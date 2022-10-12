@@ -17,7 +17,7 @@ class AndroidCourseTest(unittest.TestCase):
         
         cmd = 'adb shell su 0 setprop gsm.sim.operator.iso-country kr'
         os.popen(cmd)
-        cap = scXpath.getPath('sunbaelee', '27749574')
+        cap = scXpath.getPath('riiid', '27706198')
         self.driver = webdriver.Remote(
             command_executor='http://127.0.0.1:4723/wd/hub',
             desired_capabilities=cap)
@@ -180,12 +180,12 @@ class AndroidCourseTest(unittest.TestCase):
         # already has account 
         #driver.find_element(By.ID, "co.riiid.vida:id/btn_has_account").click()
         driver.find_element(By.XPATH, '//android.view.ViewGroup/android.widget.LinearLayout[2]').click()
-        sleep(4)
+        sleep(3)
         
         # i doesn't find a login type
         # co.riiid.vida:id/content_email
         driver.find_element(By.XPATH, '//android.view.ViewGroup/android.widget.LinearLayout[2]').click()
-        sleep(2)
+        sleep(3)
 
         # go email login 
         # co.riiid.vida:id/btn_email
@@ -195,7 +195,7 @@ class AndroidCourseTest(unittest.TestCase):
         # email field
         emailBtn =  driver.find_element(By.XPATH, "//android.view.ViewGroup[1]/android.widget.EditText")
         emailBtn.send_keys(email_id)
-        sleep(1)                                                                 
+        sleep(2)                                                                 
 
         # pw field
         pwBtn =  driver.find_element(By.XPATH, "//android.view.ViewGroup[2]/android.widget.EditText")
@@ -270,6 +270,23 @@ class AndroidCourseTest(unittest.TestCase):
 
     def isPoupExist(self):
         driver = self.driver
+
+        blChk = driver.find_element(By.XPATH, scXpath.testPrepPopup).is_displayed()
+        if blChk:
+            print('버튼 팝업 발견')
+            popupBtn = driver.find_element(By.XPATH, scXpath.testPrepPopup)
+            popupBtn.click()
+            print('버튼 팝업 닫기')
+
+        blChk = driver.find_element(By.CLASS_NAME, '//android.widget.TextView').is_displayed()
+        if blChk:
+            print('바텀시트 x 버튼 발견')
+            popupBtn = driver.find_element(By.CLASS_NAME, '//android.widget.TextView')
+            popupBtn.click()
+            print('바텀 시트 클로즈')
+
+
+        
 
         try: 
             if self.isShown(scXpath.testPrepPopup):                    

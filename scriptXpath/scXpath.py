@@ -22,7 +22,7 @@ def getPath(usrName, filename):
     appPath = f"/Users/{usrName}/Downloads/{filename}.apk"
     device_cap = {
                     "platformName": "Android",
-                    "appium:platformVersion": "12.0",
+                    "appium:platformVersion": "11.0",
                     "appium:deviceName": "Android Emulator",
                     "appium:app": appPath,
                     "appium:automationName": "Appium",

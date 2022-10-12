@@ -20,7 +20,7 @@ class androidTestPrepClass(unittest.TestCase):
     def setUp(self) -> None:
         cmd = 'adb shell su 0 setprop gsm.sim.operator.iso-country kr'
         os.popen(cmd)
-        cap = scXpath.getPath('sunbaelee', '27749574')
+        cap = scXpath.getPath('riiid', '27706198')
         print(cap)
         self.driver = webdriver.Remote(
             command_executor='http://127.0.0.1:4723/wd/hub',
@@ -35,6 +35,24 @@ class androidTestPrepClass(unittest.TestCase):
         if blChk:
             btnClose = driver.find_element(By.ID, 'co.riiid.vida.staging:id/btn_close')
             btnClose.click()
+
+        sleep(3)
+
+        selfLearningBtnScript = '//android.widget.FrameLayout[@content-desc="선택 학습"]'
+        selfLearningBtn = driver.find_element(By.XPATH, selfLearningBtnScript)
+        selfLearningBtn.click()
+        sleep(3)
+
+        # check if popup 
+        AndroidCourseTest.isPoupExist(self)
+
+        # 기초 첫 번째
+        testScript = '//androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]'
+        #testScript = "android.widget.TextView[@text, '문제']"
+        testBtn = driver.find_element(By.XPATH, testScript)
+        testBtn.clcik()
+
+
 
         print('test')
         
